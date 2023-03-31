@@ -1,26 +1,31 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace ThreeApiTest.ListOfUsers
 {
     public partial class ListOfUsers
     {
-        public int page { get; set; }
-        public int per_page { get; set; }
-        public int total { get; set; }
-        public int total_pages { get; set; }
-        public List<Data> data { get; set; }
-    }
+        [JsonProperty("page")]
+        public int Page { get; set; }
 
-    public partial class Data
-    {
-        public int id { get; set; }
-        public string email { get; set; }
-        public string first_name { get; set; }
-        public string last_name { get; set; }
-        public Uri avatar { get; set; }
+        [JsonProperty("per_page")]
+        public int PerPage { get; set; }
+
+        [JsonProperty("total")]
+        public int Total { get; set; }
+
+        [JsonProperty("total_pages")]
+        public int TotalPages { get; set; }
+
+        [JsonProperty("data")]
+        public List<Data.Data> Data { get; set; }
+
+        [JsonProperty("support")]
+        public Support.Support Support { get; set; }
     }
 }

@@ -1,61 +1,62 @@
 using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
-using ThreeApiTest.Specification;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 
 namespace ThreeApiTest
 {
     [TestFixture]
 
-    public class Tests : Specification.Specification
+    public class Tests
     {
 
         [TestCase]
         public void ListOfLinks()
         {
-            var response = GetMethod("api/people/1/", HostPrefixOne);
-            Assert.AreEqual(StatusCode200(), GetStatusCode(response), "Error statusCode");
+            Clients.ConnectSwapi connectSwapi = new Clients.ConnectSwapi();
+
+            var response = connectSwapi.GetMethod(TestSettings.Resources.GetRequestSwapi);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, "Error statusCode");
 
             var content = response.Content;
             var characteristic = JsonConvert.DeserializeObject<HumanCharacteristic.HumanCharacteristic>(content);
 
-            // вывод в консоль список ссылок на фильмы
-            for (int i = 0; i < characteristic.films.Length; i++)
+            for (int i = 0; i < characteristic.Films.Count; i++)
             {
-                Console.WriteLine(characteristic.films[i]);
+                Console.WriteLine(characteristic.Films[i]);
             }
         }
 
         [TestCase]
         public void DisplayEmail()
         {
-            var response = GetMethod("api/users?page=2", HostPrefixTwo);
-            Assert.AreEqual(StatusCode200(), GetStatusCode(response), "Error statusCode");
+            Clients.ConnectReqres connectReqres = new Clients.ConnectReqres();
+
+            var response = connectReqres.GetMethod(TestSettings.Resources.GetRequestReqres);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, "Error statusCode");
 
             var content = response.Content;
             var users = JsonConvert.DeserializeObject<ListOfUsers.ListOfUsers>(content);
 
-            for (int i = 0; i < users.data.Count; i++)
-            {
-                if (users.data[i].first_name == "George" && users.data[i].last_name == "Edwards")
-                {
-                    // вывод в консоль email пользователя
-                    Console.WriteLine(users.data[i].email);
-                }
-            }
+            var dataPerson = users.Data.First(x => x.FirstName == "George" && x.LastName == "Edwards");
+            Console.WriteLine(dataPerson.Email);
         }
 
         [TestCase]
         public void Registration()
         {
+            Clients.ConnectReqres connectReqres = new Clients.ConnectReqres();
+
             Registration.Registration reg = new Registration.Registration("morpheus", "leader");
             string json = JsonConvert.SerializeObject(reg);
-            var response = PostMethod("api/users", HostPrefixTwo, json);
+            var response = connectReqres.PostMethod(TestSettings.Resources.PostRequestReqres, json);
             var content = response.Content;
             var successfullyReg = JsonConvert.DeserializeObject<SuccessfullyRegistration.SuccessfullyRegistration>(content);
 
-            Assert.AreEqual(StatusCode201(), GetStatusCode(response), "Error statusCode");
-            Assert.IsNotNull(successfullyReg.id, "NULL");
+            Assert.AreEqual(HttpStatusCode.Created, response.StatusCode, "Error statusCode");
+            Assert.IsNotNull(successfullyReg.Id, "NULL");
         }
     }
 }

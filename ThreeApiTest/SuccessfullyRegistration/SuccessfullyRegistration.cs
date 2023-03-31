@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,16 @@ namespace ThreeApiTest.SuccessfullyRegistration
 {
     public partial class SuccessfullyRegistration
     {
-        public string name { get; set; }
-        public string job { get; set; }
-        public long id { get; set; }
-        public DateTimeOffset createdAt { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("job")]
+        public string Job { get; set; }
+
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        [JsonProperty("createdAt")]
+        public DateTime CreatedAt { get; set; }
     }
 }

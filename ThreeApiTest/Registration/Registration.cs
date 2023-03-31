@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,13 +9,16 @@ namespace ThreeApiTest.Registration
 {
     public partial class Registration
     {
-        public string name { get; set; }
-        public string job { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
 
-        public Registration(string email_, string password_)
+        [JsonProperty("job")]
+        public string Job { get; set; }
+
+        public Registration(string name_, string job_)
         {
-            name = email_;
-            job = password_;
+            Name = name_;
+            Job = job_;
         }
     }
 }
